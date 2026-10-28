@@ -35,6 +35,7 @@ var mouse_state = false
 @export var item_bob_amount: float = 0.015
 @export var item_follow_speed: float = 5.0
 
+
 var flashlight_start_pos: Vector3
 var key_start_pos: Vector3
 
