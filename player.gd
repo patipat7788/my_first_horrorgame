@@ -13,6 +13,8 @@ var time_run = false
 var has_flashlight := false
 var flashlight_on := false
 var has_key = false
+# ควบคุมกล้องระหว่างเหตุการณ์หลอน
+var event_look_locked: bool = false
 # ==========================================
 # 2. ตัวแปรระบบแกว่งหัวและเสียงเท้า
 # ==========================================
@@ -90,7 +92,38 @@ func obtain_flashlight() -> void:
 	has_flashlight = true
 	flashlight.visible = false
 	flashlight_on = false
+func look_toward_event(target_position: Vector3) -> void:
+	event_look_locked = true
 
+	# คำนวณทิศทางไปยังเป้าหมายในแนวราบ
+	var direction := target_position - global_position
+	direction.y = 0.0
+
+	if direction.length_squared() < 0.001:
+		event_look_locked = false
+		return
+
+	direction = direction.normalized()
+
+	var target_yaw := atan2(-direction.x, -direction.z)
+	var current_yaw := global_rotation.y
+
+	# เลือกหมุนทางที่สั้นที่สุด
+	var final_yaw := current_yaw + angle_difference(
+		current_yaw,
+		target_yaw
+	)
+
+	var tween := create_tween()
+	tween.tween_property(
+		self,
+		"global_rotation:y",
+		final_yaw,
+		0.45
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+	await tween.finished
+	event_look_locked = false
 func _input(event: InputEvent) -> void:
 	# เปิด-ปิดไฟฉายได้เมื่อเก็บแล้วเท่านั้น
 	if event.is_action_pressed("flashlight"):
@@ -132,9 +165,15 @@ func _ready():
 func _unhandled_input(event):
 	# ระบบหันหน้ามุมกล้อง
 	if event is InputEventMouseMotion:
+		if event_look_locked:
+			return
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 		camera.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
-		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-80), deg_to_rad(80))
+		camera.rotation.x = clamp(
+			camera.rotation.x,
+			deg_to_rad(-80),
+			deg_to_rad(80)
+		)
 		mouse_delta = event.relative
 	if event.is_action_pressed("exit_ui"):
 		mouse_state = ! mouse_state
