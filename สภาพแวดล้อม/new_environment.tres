@@ -9,5 +9,4 @@ ambient_light_energy = 5.12
 fog_enabled = true
 fog_light_color = Color(0.021255404, 0.025762312, 0.033801578, 1)
 fog_light_energy = 2.25
-fog_density = 0.1306
 volumetric_fog_density = 0.115

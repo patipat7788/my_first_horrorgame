@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://ds6i7ptpsj4gu"]
+
+[ext_resource type="PackedScene" uid="uid://b1wepdi0h6s44" path="res://assets/bear_man_psx.glb" id="1_7k104"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_slj0o"]
+
+[node name="enemy" type="Node3D" unique_id=234066930]
+
+[node name="หัวหมู" type="CharacterBody3D" parent="." unique_id=1204448614]
+
+[node name="Sketchfab_Scene" parent="หัวหมู" unique_id=1407644857 instance=ExtResource("1_7k104")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="หัวหมู" unique_id=1770069845]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.005309, 0)
+shape = SubResource("CapsuleShape3D_slj0o")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="หัวหมู" unique_id=597054159]
+
+[node name="PatrolPoints" type="Node3D" parent="หัวหมู" unique_id=825883751]
+
+[node name="Point1" type="Marker3D" parent="หัวหมู/PatrolPoints" unique_id=1674742293]
+
+[node name="Point2" type="Marker3D" parent="หัวหมู/PatrolPoints" unique_id=1485216521]
+
+[node name="Point3" type="Marker3D" parent="หัวหมู/PatrolPoints" unique_id=1654015400]
